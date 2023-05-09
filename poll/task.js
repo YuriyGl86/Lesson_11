@@ -31,7 +31,6 @@ function findIndex(elem){
 }
 
 function showStats(questionId, answerIndex){
-    console.log(questionId, answerIndex)
     const URL = 'https://students.netoservices.ru/nestjs-backend/poll'
     const params = new URLSearchParams()
     params.set('vote', questionId)
@@ -44,9 +43,20 @@ function showStats(questionId, answerIndex){
             'body': params,
         })
     .then(resp => resp.json())
-    .then(resp => console.log(resp))
+    .then(resp => {
+        answers.classList.remove('poll__answers_active')
+        resp.stat.forEach(stat => renderStat(stat))
+    })
 
 }
+
+function renderStat(stat){
+    const div = document.createElement('div')
+    div.innerText = `${stat.answer}: ${stat.votes}%`
+    question.insertAdjacentElement('afterend', div)
+
+}
+
 
 fetch('https://students.netoservices.ru/nestjs-backend/poll')
     .then(response => response.json())
